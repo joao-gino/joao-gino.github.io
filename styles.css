@@ -18,38 +18,38 @@ body {
     font-size: 18px;
 }
 
-.header nav {
+nav {
+    text-align: center;
     margin-left: auto;
-    display: flex;
+}
+
+nav ul {
     list-style: none;
-    align-items: center;
+    padding: 0;
+    margin: 10px;
 }
 
-.header nav ul {
-    display: flex;
-    list-style: none;
+nav li {
+    display: inline-block;
+    margin: 5px 10px;
 }
 
-.header nav li {
-    margin-left: 5px;
-}
-
-.header nav li a {
+nav a {
     display: flex;
     align-items: center;
+    text-decoration: none;
     color: #ffffff;
     background-color: black;
     border-radius: 10px;
-    text-decoration: none;
     padding: 10px;
 }
 
-.header nav li a svg {
+nav a svg {
     width: 1.5rem;
     height: 1.75rem;
 }
 
-.header nav li a:hover {
+nav a:hover {
     background-color: rgb(36, 36, 36);
     transition: 0.2s;
 }
@@ -84,6 +84,7 @@ main ul {
     grid-gap: 30px;
     margin: 0px;
     padding: 0px;
+    list-style-type: none;
 }
 
 main li {
@@ -153,30 +154,29 @@ main li .botao-comprar:hover {
 
 @media only screen and (max-width: 768px) {
     .header {
-      flex-direction: column;
-      text-align: center;
+        flex-direction: column;
+        text-align: center;
     }
-  
+
     .header nav {
-      margin-top: 15px;
+        margin-top: 15px;
     }
-  
+
     .header nav ul {
-      flex-direction: column;
+        flex-direction: column;
     }
-  
+
     .about-me {
-      flex-direction: column;
-      text-align: center;
+        flex-direction: column;
+        text-align: center;
     }
-  
+
     .about-me img {
-      margin-left: 0;
-      margin-top: 20px;
+        margin-left: 0;
+        margin-top: 20px;
     }
-  
+
     main ul {
-      grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: repeat(1, 1fr);
     }
-  }
-  
+}
