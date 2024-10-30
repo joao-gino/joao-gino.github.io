@@ -1,259 +1,251 @@
-/* ===================================================================
- * Dazzle - Main JS
- *
- * ------------------------------------------------------------------- */ 
-
-(function($) {
-
-	"use strict";
-
-	var cfg = {		
-		scrollDuration : 800, // smoothscroll duration
-		mailChimpURL   : 'https://facebook.us8.list-manage.com/subscribe/post?u=cdb7b577e41181934ed6a6a44&amp;id=e6957d85dc'  // mailchimp url
-	},	
-
-	$WIN = $(window);	
-
-   // Add the User Agent to the <html>
-   // will be used for IE10 detection (Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0))
-	var doc = document.documentElement;
-	doc.setAttribute('data-useragent', navigator.userAgent);
-
-	
-	/* Preloader 
-	 * -------------------------------------------------- */
-	var ssPreloader = function() {
-
-		$WIN.on('load', function() {	
-
-			// force page scroll position to top at page refresh
-			$('html, body').animate({ scrollTop: 0 }, 'normal');
-
-         // will fade out the whole preloader DIV that covers the website.
-	      $("#preloader").delay(500).fadeOut('slow');
-	  
-	  	});
-	};
-
-
-	/* Mobile Menu
-	 * ---------------------------------------------------- */ 
-	var ssMobileMenu = function() {
-
-  		var toggleButton = $('.header-menu-toggle'),
-          nav = $('#header-nav-wrap');
-
-		toggleButton.on('click', function(event){
-			event.preventDefault();
-
-			toggleButton.toggleClass('is-clicked');
-			nav.slideToggle();
-		});
-
-		if (toggleButton.is(':visible')) nav.addClass('mobile');
-
-		$(window).resize(function() {
-			if (toggleButton.is(':visible')) nav.addClass('mobile');
-			else nav.removeClass('mobile');
-		});
-
-		$('#header-nav-wrap').find('a').on("click", function() {  
-
-			if (nav.hasClass('mobile')) {   		
-				toggleButton.toggleClass('is-clicked'); 
-				nav.slideToggle();   		
-			}     
-		});
-
-	}; 
-
-
-	/* FitVids
-	 * ---------------------------------------------------- */
-	var ssFitVids = function() {
-		$(".fluid-video-wrapper").fitVids();
-	}; 
-
-
-
-  /* Owl Carousel
-	* ------------------------------------------------------ */
-	var ssOwlCarousel = function() {
-
-		$(".owl-carousel").owlCarousel({	
-	      loop: true,
-  			nav: false,
-			autoHeight: true,
-  			items: 1
-		});
-
-	};  	
-
-
-  /* Highlight the current section in the navigation bar
-	* ------------------------------------------------------ */
-	var ssWaypoints = function() {
-
-		var sections = $("section"),
-		navigation_links = $(".header-main-nav li a");	
-
-		sections.waypoint( {
-
-	       handler: function(direction) {
-
-			   var active_section;
-
-				active_section = $('section#' + this.element.id);
-
-				if (direction === "up") active_section = active_section.prev();
-
-				var active_link = $('.header-main-nav li a[href="#' + active_section.attr("id") + '"]');			
-
-	         navigation_links.parent().removeClass("current");
-				active_link.parent().addClass("current");
-
-			}, 
-
-			offset: '25%'
-
-		});
-	};
-
-
-  /* Smooth Scrolling
-	* ------------------------------------------------------ */
-	var ssSmoothScroll = function() {
-
-		$('.smoothscroll').on('click', function (e) {
-			var target = this.hash,
-			$target    = $(target);
-	 	
-		 	e.preventDefault();
-		 	e.stopPropagation();	  
-
-			$('html, body').stop().animate({
-				'scrollTop': $target.offset().top
-			}, cfg.scrollDuration, 'swing', function () {
-				window.location.hash = target;
-			});
-
-	  	});
-
-	};
-
-
-
-  /* Placeholder Plugin Settings
-	* ------------------------------------------------------ */
-	var ssPlaceholder = function() {
-		$('input, textarea, select').placeholder();  
-	};
-
-
-
-  	/* Alert Boxes
-  	------------------------------------------------------- */
-  	var ssAlertBoxes = function() {
-
-  		$('.alert-box').on('click', '.close', function() {
-		  $(this).parent().fadeOut(500);
-		}); 
-
-  	};	  	
-	
-
-
-  /* Animate On Scroll
-  	* ------------------------------------------------------ */
-	var ssAOS = function() {
-
-		AOS.init( {
-      	offset: 200,
-      	duration: 600,
-      	easing: 'ease-in-sine',
-      	delay: 300,
-			once: true,
-			disable: 'mobile'
-    	});
-
-	};
-
-
-  /* AjaxChimp
-	* ------------------------------------------------------ */
-	var ssAjaxChimp = function() {
-
-		$('#mc-form').ajaxChimp({
-			language: 'es',
-		   url: cfg.mailChimpURL
-		});
-
-		// Mailchimp translation
-		//
-		//  Defaults:
-		//	 'submit': 'Submitting...',
-		//  0: 'We have sent you a confirmation email',
-		//  1: 'Please enter a value',
-		//  2: 'An email address must contain a single @',
-		//  3: 'The domain portion of the email address is invalid (the portion after the @: )',
-		//  4: 'The username portion of the email address is invalid (the portion before the @: )',
-		//  5: 'This email address looks fake or invalid. Please enter a real email address'
-
-		$.ajaxChimp.translations.es = {
-		  'submit': 'Submitting...',
-		  0: '<i class="fa fa-check"></i> We have sent you a confirmation email',
-		  1: '<i class="fa fa-warning"></i> You must enter a valid e-mail address.',
-		  2: '<i class="fa fa-warning"></i> E-mail address is not valid.',
-		  3: '<i class="fa fa-warning"></i> E-mail address is not valid.',
-		  4: '<i class="fa fa-warning"></i> E-mail address is not valid.',
-		  5: '<i class="fa fa-warning"></i> E-mail address is not valid.'
-		} 
-
-	};
-
-
- 
-  /* Back to Top
-	* ------------------------------------------------------ */
-	var ssBackToTop = function() {
-
-		var pxShow  = 500,         // height on which the button will show
-		fadeInTime  = 400,         // how slow/fast you want the button to show
-		fadeOutTime = 400,         // how slow/fast you want the button to hide
-		scrollSpeed = 300,         // how slow/fast you want the button to scroll to top. can be a value, 'slow', 'normal' or 'fast'
-		goTopButton = $("#go-top")
-
-		// Show or hide the sticky footer button
-		$(window).on('scroll', function() {
-			if ($(window).scrollTop() >= pxShow) {
-				goTopButton.fadeIn(fadeInTime);
-			} else {
-				goTopButton.fadeOut(fadeOutTime);
-			}
-		});
-	};	
-
-  
-   /* Initialize
-	* ------------------------------------------------------ */
-	(function ssInit() {
-
-		ssPreloader();
-		ssMobileMenu();
-		ssFitVids();
-		ssOwlCarousel();
-		ssWaypoints();
-		ssSmoothScroll();
-		ssPlaceholder();
-		ssAlertBoxes();
-		ssAOS();
-		ssBackToTop();
-
-		// to use the mailchimp form, uncomment the 
-		// function call ssAjaxChimp() below:
-		// ssAjaxChimp(); 
-
-	})();
- 
-
-})(jQuery);
+var $ = jQuery.noConflict();
+
+$(document).ready(function($) {
+    "use strict";
+
+    /*----------------------------------------------------*/
+    /*  Parallax Scrolling
+    /*----------------------------------------------------*/
+
+    $(window).on('load', function() {
+        parallaxInit();
+    });
+
+    function parallaxInit() {
+        $("#top-banner").parallax("50%", 0.5);
+        $("#count-success").parallax("50%", 0.5);
+        $("#subscribe").parallax("50%", 0.5);
+        $("#buy-now").parallax("50%", 0.5);
+    }
+    parallaxInit();
+
+    /*----------------------------------------------------*/
+    /*  PrettyPhoto
+    /*----------------------------------------------------*/
+
+    $("a[rel^='prettyPhoto']").prettyPhoto({
+        social_tools: false
+    });
+
+    /*----------------------------------------------------*/
+    /*  owl carousel
+    /*----------------------------------------------------*/
+
+    $('.preview-carousel').owlCarousel({
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            480: {
+                items: 2
+            },
+            769: {
+                items: 3
+            }
+        },
+        dots: false,
+        nav: true,
+        navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+    });
+
+    $('.book-carousel').owlCarousel({
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            480: {
+                items: 2
+            },
+            769: {
+                items: 3
+            }
+        },
+        dots: false,
+        nav: true,
+        navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+    });
+
+    /*----------------------------------------------------*/
+    /*  sticky header
+    /*----------------------------------------------------*/
+
+    $(window).scroll(function() {
+
+        if ($(window).scrollTop() > 700) {
+
+            $('.main-nav').addClass('navbar-fixed-top animated fadeInDown');
+        } else {
+
+            $('.main-nav').removeClass('navbar-fixed-top animated fadeInDown');
+
+        }
+    });
+
+    /*----------------------------------------------------*/
+    /*  Page Scroll
+    /*----------------------------------------------------*/
+
+    $(function() {
+        $('a.page-scroll').on('click', function(event) {
+            var $anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: $($anchor.attr('href')).offset().top - 50
+            }, 1000, 'easeInOutExpo');
+            event.preventDefault();
+        });
+    });
+
+
+    /*----------------------------------------------------*/
+    /*  Timer 
+    /*----------------------------------------------------*/
+
+    $('#count-success').on('inview', function(event, visible, visiblePartX, visiblePartY) {
+        if (visible) {
+            $(this).find('.timer').each(function() {
+                var $this = $(this);
+                $({
+                    Counter: 0
+                }).animate({
+                    Counter: $this.text()
+                }, {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function() {
+                        $this.text(Math.ceil(this.Counter));
+                    }
+                });
+            });
+            $(this).off('inview');
+        }
+    });
+
+    /*----------------------------------------------------*/
+    /*  Wow Js
+    /*----------------------------------------------------*/
+
+    new WOW().init();
+
+    /*----------------------------------------------------*/
+    /*	Back Top Link
+    /*----------------------------------------------------*/
+
+    var offset = 200;
+    var duration = 1000;
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > offset) {
+            $('.back-to-top').fadeIn(400);
+        } else {
+            $('.back-to-top').fadeOut(400);
+        }
+    });
+    $('.back-to-top').on("click", function(event) {
+        event.preventDefault();
+        $('html, body').animate({
+            scrollTop: 0
+        }, 1000);
+        return false;
+    });
+
+    /*----------------------------------------------------*/
+    /*  SmoothScroll
+    /*----------------------------------------------------*/
+
+    $('html').smoothScroll(1000);
+
+    /*----------------------------------------------------*/
+    /*  Contact Form
+    /*----------------------------------------------------*/
+
+    $("#contact").submit(function(e) {
+        e.preventDefault();
+        var name = $("#name").val();
+        var email = $("#email").val();
+        var subject = $("#subject").val();
+        var message = $("#message").val();
+        var dataString = 'name=' + name + '&email=' + email + '&subject=' + subject + '&message=' + message;
+
+        function isValidEmail(emailAddress) {
+            var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+            return pattern.test(emailAddress);
+        };
+
+        if (isValidEmail(email) && (message.length > 1) && (name.length > 1)) {
+            $.ajax({
+                type: "POST",
+                url: "sendmail.php",
+                data: dataString,
+                success: function() {
+                    $('.success').fadeIn(1000);
+                    $('.error').fadeOut(500);
+                }
+            });
+        } else {
+            $('.error').fadeIn(1000);
+            $('.success').fadeOut(500);
+        }
+
+        return false;
+    });
+    /*----------------------------------------------------*/
+    /*  Subscribe
+    /*----------------------------------------------------*/
+    ajaxMailChimpForm($("#newsletter"), $("#subscribe-result"));
+    // Turn the given MailChimp form into an ajax version of it.
+    function ajaxMailChimpForm($form, $resultElement) {
+        $form.submit(function(e) {
+            e.preventDefault();
+            if (!isValidEmail($form)) {
+                var error = "A valid email address must be provided.";
+                $resultElement.html(error);
+                $resultElement.css("color", "red");
+            } else {
+                $resultElement.css("color", "black");
+                $resultElement.html("Subscribing...");
+                submitSubscribeForm($form, $resultElement);
+            }
+        });
+    }
+    // Validate the email address in the form
+    function isValidEmail($form) {
+        // If email is empty, show error message.
+        var email = $form.find("input[type='email']").val();
+        if (!email || !email.length) {
+            return false;
+        } else if (email.indexOf("@") == -1) {
+            return false;
+        }
+        return true;
+    }
+
+    function submitSubscribeForm($form, $resultElement) {
+        $.ajax({
+            type: "GET",
+            url: $form.attr("action"),
+            data: $form.serialize(),
+            cache: false,
+            dataType: "jsonp",
+            jsonp: "c", // trigger MailChimp to return a JSONP response
+            contentType: "application/json; charset=utf-8",
+            error: function(error) {
+
+            },
+            success: function(data) {
+                if (data.result != "success") {
+                    var message = data.msg || "Sorry. Unable to subscribe. Please try again later.";
+                    $resultElement.css("color", "red");
+                    if (data.msg && data.msg.indexOf("already subscribed") >= 0) {
+                        message = "You're already subscribed. Thank you.";
+                        $resultElement.css("color", "black");
+                    }
+                    $resultElement.html(message);
+                } else {
+                    $resultElement.css("color", "black");
+                    $resultElement.html("Thank you!<br>You must confirm the subscription in your inbox.");
+                }
+            }
+        });
+    }
+});
