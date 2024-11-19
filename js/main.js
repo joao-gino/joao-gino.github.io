@@ -12,7 +12,7 @@ $(document).ready(function($) {
     });
 
     function parallaxInit() {
-        $("#top-banner").parallax("50%", 0.5);
+        // $("#top-banner").parallax("50%", 0.5);
         $("#count-success").parallax("50%", 0.5);
         $("#subscribe").parallax("50%", 0.5);
         $("#buy-now").parallax("50%", 0.5);
